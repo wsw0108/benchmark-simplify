@@ -19,9 +19,16 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.opengis.feature.simple.SimpleFeature;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+@State(Scope.Thread)
 public class SimpleBenchmark {
     private static PointExtractor<Coordinate> pointExtractor = new PointExtractor<Coordinate>() {
         @Override
@@ -34,7 +41,6 @@ public class SimpleBenchmark {
             return point.getOrdinate(1);
         }
     };
-    private static Simplify<Coordinate> simplify = new Simplify<>(new Coordinate[] {}, pointExtractor);
     private static double TOLERANCE = 3;
     private static double TOLERANCE2 = TOLERANCE * TOLERANCE;
     private List<Geometry> geometryList = new ArrayList<>();
@@ -42,6 +48,17 @@ public class SimpleBenchmark {
     private List<Geometry> jsPortResult2 = new ArrayList<>();
     private List<Geometry> jtsResult = new ArrayList<>();
     private List<Geometry> jtsResult2 = new ArrayList<>();
+
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+            .include(SimpleBenchmark.class.getSimpleName())
+            .warmupIterations(5)
+            .measurementIterations(10)
+            .forks(1)
+            .build();
+
+        new Runner(opt).run();
+    }
 
     @Setup
     public void setup() throws IOException {
@@ -112,6 +129,7 @@ public class SimpleBenchmark {
     private class SimplifyTransformer extends GeometryTransformer {
         private double tolerance;
         private boolean highestQuality = true;
+        private Simplify<Coordinate> simplify = new Simplify<>(new Coordinate[] {}, pointExtractor);
 
         SimplifyTransformer(double tolerance) {
             this.tolerance = tolerance;
