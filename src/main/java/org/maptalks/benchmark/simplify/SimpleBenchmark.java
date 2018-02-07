@@ -13,6 +13,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -28,7 +29,6 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-@State(Scope.Thread)
 public class SimpleBenchmark {
     private static PointExtractor<Coordinate> pointExtractor = new PointExtractor<Coordinate>() {
         @Override
@@ -43,11 +43,6 @@ public class SimpleBenchmark {
     };
     private static double TOLERANCE = 3;
     private static double TOLERANCE2 = TOLERANCE * TOLERANCE;
-    private List<Geometry> geometryList = new ArrayList<>();
-    private List<Geometry> jsPortResult = new ArrayList<>();
-    private List<Geometry> jsPortResult2 = new ArrayList<>();
-    private List<Geometry> jtsResult = new ArrayList<>();
-    private List<Geometry> jtsResult2 = new ArrayList<>();
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
@@ -60,69 +55,70 @@ public class SimpleBenchmark {
         new Runner(opt).run();
     }
 
-    @Setup
-    public void setup() throws IOException {
-        URL url = getClass().getResource("/province_region.shp");
-        ShapefileDataStore store = new ShapefileDataStore(url);
-        store.setCharset(Charset.forName("GBK"));
-        SimpleFeatureSource source = store.getFeatureSource();
-        SimpleFeatureCollection collection = source.getFeatures();
-        try (SimpleFeatureIterator iter = collection.features()) {
-            while (iter.hasNext()) {
-                SimpleFeature feature = iter.next();
-                Geometry geometry = (Geometry) feature.getDefaultGeometry();
-                geometryList.add(geometry);
-            }
-        }
-    }
-
-    @TearDown
-    public void tearDown() {
-        jsPortResult.clear();
-        jtsResult.clear();
-        jsPortResult = null;
-        jtsResult = null;
-        jsPortResult2.clear();
-        jtsResult2.clear();
-        jsPortResult2 = null;
-        jtsResult2 = null;
-    }
-
     @Benchmark
-    public void testSimplifyUsingJsPort() {
+    public void testSimplifyUsingJsPort(BenchmarkState state) {
+        AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
         SimplifyTransformer transformer = new SimplifyTransformer(TOLERANCE);
         transformer.setHighestQuality(true);
-        for (Geometry geometry : geometryList) {
-            jsPortResult.add(transformer.transform(geometry));
+        for (Geometry geometry : state.geometryList) {
+            result.get().add(transformer.transform(geometry));
         }
     }
 
     @Benchmark
-    public void testSimplifyUsingJsPortNoHigestQuality() {
+    public void testSimplifyUsingJsPortNoHighestQuality(BenchmarkState state) {
+        AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
         SimplifyTransformer transformer = new SimplifyTransformer(TOLERANCE);
         transformer.setHighestQuality(false);
-        for (Geometry geometry : geometryList) {
-            jsPortResult2.add(transformer.transform(geometry));
+        for (Geometry geometry : state.geometryList) {
+            result.get().add(transformer.transform(geometry));
         }
     }
 
     @Benchmark
-    public void testSimplifyUsingJTS() {
-        for (Geometry geometry : geometryList) {
+    public void testSimplifyUsingJTS(BenchmarkState state) {
+        AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
+        for (Geometry geometry : state.geometryList) {
             DouglasPeuckerSimplifier tss = new DouglasPeuckerSimplifier(geometry);
             tss.setDistanceTolerance(TOLERANCE2);
             tss.setEnsureValid(true);
-            jtsResult.add(tss.getResultGeometry());
+            result.get().add(tss.getResultGeometry());
         }
     }
 
     @Benchmark
-    public void testSimplifyUsingJTSDontEnsureValid() {
-        for (Geometry geometry : geometryList) {
+    public void testSimplifyUsingJTSDontEnsureValid(BenchmarkState state) {
+        AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
+        for (Geometry geometry : state.geometryList) {
             DouglasPeuckerSimplifier tss = new DouglasPeuckerSimplifier(geometry);
             tss.setDistanceTolerance(TOLERANCE2);
             tss.setEnsureValid(false);
-            jtsResult2.add(tss.getResultGeometry());
+            result.get().add(tss.getResultGeometry());
+        }
+    }
+
+    @State(Scope.Benchmark)
+    public static class BenchmarkState {
+        volatile List<Geometry> geometryList = new ArrayList<>();
+
+        @Setup
+        public void setup() throws IOException {
+            URL url = getClass().getResource("/province_region.shp");
+            ShapefileDataStore store = new ShapefileDataStore(url);
+            store.setCharset(Charset.forName("GBK"));
+            SimpleFeatureSource source = store.getFeatureSource();
+            SimpleFeatureCollection collection = source.getFeatures();
+            try (SimpleFeatureIterator iter = collection.features()) {
+                while (iter.hasNext()) {
+                    SimpleFeature feature = iter.next();
+                    Geometry geometry = (Geometry) feature.getDefaultGeometry();
+                    geometryList.add(geometry);
+                }
+            }
+        }
+
+        @TearDown
+        public void tearDown() {
         }
     }
 
