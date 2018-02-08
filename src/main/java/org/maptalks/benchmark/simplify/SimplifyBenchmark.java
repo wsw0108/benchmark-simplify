@@ -56,7 +56,7 @@ public class SimplifyBenchmark {
     }
 
     @Benchmark
-    public void testSimplifyUsingJsPort(BenchmarkState state) {
+    public void benchSimplifyUsingJsPort(BenchmarkState state) {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
         SimplifyTransformer transformer = new SimplifyTransformer(TOLERANCE);
         transformer.setHighestQuality(true);
@@ -66,7 +66,7 @@ public class SimplifyBenchmark {
     }
 
     @Benchmark
-    public void testSimplifyUsingJsPortNoHighestQuality(BenchmarkState state) {
+    public void benchSimplifyUsingJsPortNoHighestQuality(BenchmarkState state) {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
         SimplifyTransformer transformer = new SimplifyTransformer(TOLERANCE);
         transformer.setHighestQuality(false);
@@ -76,7 +76,7 @@ public class SimplifyBenchmark {
     }
 
     @Benchmark
-    public void testSimplifyUsingJTS(BenchmarkState state) {
+    public void benchSimplifyUsingJTS(BenchmarkState state) {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
         for (Geometry geometry : state.geometryList) {
             DouglasPeuckerSimplifier tss = new DouglasPeuckerSimplifier(geometry);
@@ -87,7 +87,7 @@ public class SimplifyBenchmark {
     }
 
     @Benchmark
-    public void testSimplifyUsingJTSDontEnsureValid(BenchmarkState state) {
+    public void benchSimplifyUsingJTSDontEnsureValid(BenchmarkState state) {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
         for (Geometry geometry : state.geometryList) {
             DouglasPeuckerSimplifier tss = new DouglasPeuckerSimplifier(geometry);
