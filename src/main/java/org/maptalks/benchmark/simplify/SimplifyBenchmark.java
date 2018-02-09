@@ -1,12 +1,6 @@
 package org.maptalks.benchmark.simplify;
 
-import com.goebl.simplify.PointExtractor;
-import com.goebl.simplify.Simplify;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
-import com.vividsolutions.jts.geom.util.GeometryTransformer;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import java.io.IOException;
 import java.net.URL;
@@ -30,17 +24,6 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 public class SimplifyBenchmark {
-    private static PointExtractor<Coordinate> pointExtractor = new PointExtractor<Coordinate>() {
-        @Override
-        public double getX(Coordinate point) {
-            return point.getOrdinate(0);
-        }
-
-        @Override
-        public double getY(Coordinate point) {
-            return point.getOrdinate(1);
-        }
-    };
     private static double TOLERANCE = 3;
     private static double TOLERANCE2 = TOLERANCE * TOLERANCE;
 
@@ -58,20 +41,20 @@ public class SimplifyBenchmark {
     @Benchmark
     public void benchSimplifyUsingJsPort(BenchmarkState state) {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
-        SimplifyTransformer transformer = new SimplifyTransformer(TOLERANCE);
-        transformer.setHighestQuality(true);
+        SimplifyTransformer simplifier = new SimplifyTransformer(TOLERANCE);
+        simplifier.setHighestQuality(true);
         for (Geometry geometry : state.geometryList) {
-            result.get().add(transformer.transform(geometry));
+            result.get().add(simplifier.transform(geometry));
         }
     }
 
     @Benchmark
     public void benchSimplifyUsingJsPortNoHighestQuality(BenchmarkState state) {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
-        SimplifyTransformer transformer = new SimplifyTransformer(TOLERANCE);
-        transformer.setHighestQuality(false);
+        SimplifyTransformer simplifier = new SimplifyTransformer(TOLERANCE);
+        simplifier.setHighestQuality(false);
         for (Geometry geometry : state.geometryList) {
-            result.get().add(transformer.transform(geometry));
+            result.get().add(simplifier.transform(geometry));
         }
     }
 
@@ -122,24 +105,4 @@ public class SimplifyBenchmark {
         }
     }
 
-    private class SimplifyTransformer extends GeometryTransformer {
-        private double tolerance;
-        private boolean highestQuality = true;
-        private Simplify<Coordinate> simplify = new Simplify<>(new Coordinate[] {}, pointExtractor);
-
-        SimplifyTransformer(double tolerance) {
-            this.tolerance = tolerance;
-        }
-
-        void setHighestQuality(boolean highestQuality) {
-            this.highestQuality = highestQuality;
-        }
-
-        @Override
-        protected CoordinateSequence transformCoordinates(CoordinateSequence coords, Geometry parent) {
-            Coordinate[] points = coords.toCoordinateArray();
-            Coordinate[] result = simplify.simplify(points, tolerance, highestQuality);
-            return new CoordinateArraySequence(result);
-        }
-    }
 }
