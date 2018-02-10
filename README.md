@@ -5,8 +5,8 @@ Benchmarks for some java libraries.
 
 ### Run
 
-- Run SimpleBenchmark.main(), OR
-- Run `java -jar target\benchmarks.jar SimpleBenchmark`
+- Run SimplifyBenchmark.main(), OR
+- Run `java -jar target\benchmarks.jar SimplifyBenchmark`
 
 ### Reference Result
 
