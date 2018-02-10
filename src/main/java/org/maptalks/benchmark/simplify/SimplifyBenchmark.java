@@ -1,6 +1,11 @@
 package org.maptalks.benchmark.simplify;
 
+import static org.maptalks.benchmark.simplify.SimplifyParameters.distanceTolerance;
+
+import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
+import com.vividsolutions.jts.geom.util.GeometryTransformer;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import java.io.IOException;
 import java.net.URL;
@@ -24,8 +29,6 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 public class SimplifyBenchmark {
-    private static double TOLERANCE = 3;
-    private static double TOLERANCE2 = TOLERANCE * TOLERANCE;
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
@@ -41,7 +44,7 @@ public class SimplifyBenchmark {
     @Benchmark
     public void benchSimplifyUsingJsPort(BenchmarkState state) {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
-        SimplifyTransformer simplifier = new SimplifyTransformer(TOLERANCE);
+        SimplifyTransformer simplifier = new SimplifyTransformer(distanceTolerance);
         simplifier.setHighestQuality(true);
         for (Geometry geometry : state.geometryList) {
             result.get().add(simplifier.transform(geometry));
@@ -51,7 +54,7 @@ public class SimplifyBenchmark {
     @Benchmark
     public void benchSimplifyUsingJsPortNoHighestQuality(BenchmarkState state) {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
-        SimplifyTransformer simplifier = new SimplifyTransformer(TOLERANCE);
+        SimplifyTransformer simplifier = new SimplifyTransformer(distanceTolerance);
         simplifier.setHighestQuality(false);
         for (Geometry geometry : state.geometryList) {
             result.get().add(simplifier.transform(geometry));
@@ -63,7 +66,7 @@ public class SimplifyBenchmark {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
         for (Geometry geometry : state.geometryList) {
             DouglasPeuckerSimplifier tss = new DouglasPeuckerSimplifier(geometry);
-            tss.setDistanceTolerance(TOLERANCE2);
+            tss.setDistanceTolerance(distanceTolerance);
             tss.setEnsureValid(true);
             result.get().add(tss.getResultGeometry());
         }
@@ -74,9 +77,38 @@ public class SimplifyBenchmark {
         AtomicReference<List<Geometry>> result = new AtomicReference<>(new ArrayList<>());
         for (Geometry geometry : state.geometryList) {
             DouglasPeuckerSimplifier tss = new DouglasPeuckerSimplifier(geometry);
-            tss.setDistanceTolerance(TOLERANCE2);
+            tss.setDistanceTolerance(distanceTolerance);
             tss.setEnsureValid(false);
             result.get().add(tss.getResultGeometry());
+        }
+    }
+
+    private static class NormalizeTransformer extends GeometryTransformer {
+        private static double projectX(double x) {
+            return x / 360 + 0.5;
+        }
+
+        private static double projectY(double y) {
+            double sin = Math.sin(y * Math.PI / 180);
+            double y2 = 0.5 - 0.25 * Math.log((1 + sin) / (1 - sin)) / Math.PI;
+            return y2 < 0 ? 0 : y2 > 1 ? 1 : y2;
+        }
+
+        @Override
+        protected CoordinateSequence transformCoordinates(CoordinateSequence input, Geometry parent) {
+            int size = input.size();
+            // int dim = 2;
+            // CoordinateSequence output = new PackedCoordinateSequence.Double(size, dim);
+            CoordinateSequence output = new CoordinateArraySequence(size);
+            for (int i = 0; i < size; i++) {
+                double x = input.getX(i);
+                double y = input.getY(i);
+                x = projectX(x);
+                y = projectY(y);
+                output.setOrdinate(i, CoordinateSequence.X, x);
+                output.setOrdinate(i, CoordinateSequence.Y, y);
+            }
+            return output;
         }
     }
 
@@ -91,11 +123,12 @@ public class SimplifyBenchmark {
             store.setCharset(Charset.forName("GBK"));
             SimpleFeatureSource source = store.getFeatureSource();
             SimpleFeatureCollection collection = source.getFeatures();
+            NormalizeTransformer normalizer = new NormalizeTransformer();
             try (SimpleFeatureIterator iter = collection.features()) {
                 while (iter.hasNext()) {
                     SimpleFeature feature = iter.next();
                     Geometry geometry = (Geometry) feature.getDefaultGeometry();
-                    geometryList.add(geometry);
+                    geometryList.add(normalizer.transform(geometry));
                 }
             }
         }

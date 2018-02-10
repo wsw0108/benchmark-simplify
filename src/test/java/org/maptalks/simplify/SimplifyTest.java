@@ -1,5 +1,7 @@
 package org.maptalks.simplify;
 
+import static org.maptalks.benchmark.simplify.SimplifyParameters.distanceTolerance;
+
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.CoordinateSequenceFilter;
 import com.vividsolutions.jts.geom.Geometry;
@@ -31,8 +33,6 @@ import org.opengis.feature.simple.SimpleFeature;
 public class SimplifyTest {
     private static final int WIDTH = 1400;
     private static final int HEIGHT = 800;
-    private static final double TOLERANCE = 0.08;
-    private static final double TOLERANCE2 = TOLERANCE * TOLERANCE;
     private static List<Geometry> normalizedGeometryList = new ArrayList<>();
 
     private static DrawContext createDrawContext() {
@@ -85,7 +85,7 @@ public class SimplifyTest {
     public void testSimplifyUsingJsPort() throws IOException {
         DrawContext context = createDrawContext();
         ShapeFilter filter = createShapeFilter();
-        SimplifyTransformer simplifier = new SimplifyTransformer(TOLERANCE);
+        SimplifyTransformer simplifier = new SimplifyTransformer(distanceTolerance);
         simplifier.setHighestQuality(true);
         for (Geometry geometry : normalizedGeometryList) {
             Geometry simplified = simplifier.transform(geometry);
@@ -100,7 +100,7 @@ public class SimplifyTest {
     public void testSimplifyUsingJsPortNoHighestQuality() throws IOException {
         DrawContext context = createDrawContext();
         ShapeFilter filter = createShapeFilter();
-        SimplifyTransformer simplifier = new SimplifyTransformer(TOLERANCE);
+        SimplifyTransformer simplifier = new SimplifyTransformer(distanceTolerance);
         simplifier.setHighestQuality(false);
         for (Geometry geometry : normalizedGeometryList) {
             Geometry simplified = simplifier.transform(geometry);
@@ -117,7 +117,7 @@ public class SimplifyTest {
         ShapeFilter filter = createShapeFilter();
         for (Geometry geometry : normalizedGeometryList) {
             DouglasPeuckerSimplifier tss = new DouglasPeuckerSimplifier(geometry);
-            tss.setDistanceTolerance(TOLERANCE2);
+            tss.setDistanceTolerance(distanceTolerance);
             tss.setEnsureValid(true);
             Geometry simplified = tss.getResultGeometry();
             simplified.apply(filter);
@@ -133,7 +133,7 @@ public class SimplifyTest {
         ShapeFilter filter = createShapeFilter();
         for (Geometry geometry : normalizedGeometryList) {
             DouglasPeuckerSimplifier tss = new DouglasPeuckerSimplifier(geometry);
-            tss.setDistanceTolerance(TOLERANCE2);
+            tss.setDistanceTolerance(distanceTolerance);
             tss.setEnsureValid(false);
             Geometry simplified = tss.getResultGeometry();
             simplified.apply(filter);

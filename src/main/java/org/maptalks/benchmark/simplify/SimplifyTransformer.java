@@ -25,8 +25,8 @@ public class SimplifyTransformer extends GeometryTransformer {
     private boolean highestQuality = true;
     private Simplify<Coordinate> simplify = new Simplify<>(new Coordinate[] {}, pointExtractor);
 
-    public SimplifyTransformer(double tolerance) {
-        this.tolerance = tolerance;
+    public SimplifyTransformer(double distanceTolerance) {
+        this.tolerance = distanceTolerance;
     }
 
     public void setHighestQuality(boolean highestQuality) {
@@ -35,7 +35,6 @@ public class SimplifyTransformer extends GeometryTransformer {
 
     @Override
     protected CoordinateSequence transformCoordinates(CoordinateSequence coords, Geometry parent) {
-        // FIXME: bad simplify result???
         Coordinate[] points = coords.toCoordinateArray();
         Coordinate[] result = simplify.simplify(points, tolerance, highestQuality);
         return new CoordinateArraySequence(result);
