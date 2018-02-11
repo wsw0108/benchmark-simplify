@@ -9,7 +9,7 @@ import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 import com.vividsolutions.jts.geom.util.GeometryTransformer;
 
 public class SimplifyTransformer extends GeometryTransformer {
-    private static PointExtractor<Coordinate> pointExtractor = new PointExtractor<Coordinate>() {
+    static PointExtractor<Coordinate> pointExtractor = new PointExtractor<Coordinate>() {
         @Override
         public double getX(Coordinate point) {
             return point.getOrdinate(0);

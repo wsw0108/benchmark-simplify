@@ -37,11 +37,26 @@
       <groupId>org.geotools</groupId>
       <artifactId>gt-shapefile</artifactId>
       <version>13.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jdom</groupId>
+          <artifactId>jdom</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.media</groupId>
+          <artifactId>jai_core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-core-benchmarks</artifactId>
       <version>1.20</version>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.7</version>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
@@ -67,6 +82,13 @@
           <compilerVersion>${jdk.version}</compilerVersion>
           <source>${jdk.version}</source>
           <target>${jdk.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>true</skipTests>
         </configuration>
       </plugin>
       <plugin>
