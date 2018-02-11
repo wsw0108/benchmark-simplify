@@ -19,8 +19,8 @@ Benchmarks for some java libraries.
 
 ### Benchmark against test fixtures of simplify-js
 
-| Benchmark                                              |  Mode | Cnt |     Score |     Error | Units
-| :----------------------------------------------------- | _____ | --- | --------: | :-------- |
-| JsDataSetBenchmark.simplifyUsingJTS                    | thrpt | 200 |  7211.125 | ± 319.158 | ops/s
-| JsDataSetBenchmark.simplifyUsingJsPort                 | thrpt | 200 | 12957.125 | ±  84.840 | ops/s
-| JsDataSetBenchmark.simplifyUsingJsPortNoHighestQuality | thrpt | 200 | 19633.485 | ± 270.524 | ops/s
+| Benchmark                                              |  Mode | Cnt |     Score |     Error | Units |
+| :----------------------------------------------------- | ----- | --- | --------: | :-------- | ----  |
+| JsDataSetBenchmark.simplifyUsingJTS                    | thrpt | 200 |  7211.125 | ± 319.158 | ops/s |
+| JsDataSetBenchmark.simplifyUsingJsPort                 | thrpt | 200 | 12957.125 | ±  84.840 | ops/s |
+| JsDataSetBenchmark.simplifyUsingJsPortNoHighestQuality | thrpt | 200 | 19633.485 | ± 270.524 | ops/s |
