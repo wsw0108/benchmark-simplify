@@ -20,6 +20,10 @@
       <name>boundlessgeo</name>
       <url>http://repo.boundlessgeo.com/main/</url>
     </repository>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -42,10 +46,6 @@
           <groupId>org.jdom</groupId>
           <artifactId>jdom</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>javax.media</groupId>
-          <artifactId>jai_core</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -57,6 +57,16 @@
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
       <version>1.2.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.maptalks</groupId>
+      <artifactId>proj4m</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.watertank</groupId>
+      <artifactId>proj4m-lite</artifactId>
+      <version>f88fc7057d</version>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
