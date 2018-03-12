@@ -56,3 +56,14 @@ Benchmarks for some java libraries.
 | ReadJTSBenchmark.benchLocationTechGeoJSON | thrpt | 200 | 33.473 | ± 0.152 | ops/s |
 | ReadJTSBenchmark.benchMaptalksGeoJSON     | thrpt | 200 | 38.823 | ± 0.625 | ops/s |
 | ReadJTSBenchmark.benchWololoGeoJSON       | thrpt | 200 | 43.695 | ± 0.149 | ops/s |
+
+## Deserialize GeoJSON string to JTS Geometry based Feature
+
+### Result
+
+| Benchmark                                                 |  Mode | Cnt |  Score | Error   | Units |
+| :-------------------------------------------------------- | ----- | --- | -----: | :------ | ----- |
+| DeserializeFeatureBenchmark.benchMediumDataJacksonDataJTS | thrpt |  10 |  35.682| ± 0.438 | ops/s |
+| DeserializeFeatureBenchmark.benchMediumDataMaptalksGeoJSON| thrpt |  10 |  19.510| ± 0.535 | ops/s |
+| DeserializeFeatureBenchmark.benchSmallDataJacksonDataJTS  | thrpt |  10 | 287.442| ± 2.012 | ops/s |
+| DeserializeFeatureBenchmark.benchSmallDataMaptalksGeoJSON | thrpt |  10 | 159.009| ± 0.779 | ops/s |
