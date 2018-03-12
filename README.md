@@ -25,7 +25,7 @@ Benchmarks for some java libraries.
 | JsDataSetBenchmark.simplifyUsingJsPort                 | thrpt | 200 | 12957.125 | ±  84.840 | ops/s |
 | JsDataSetBenchmark.simplifyUsingJsPortNoHighestQuality | thrpt | 200 | 19633.485 | ± 270.524 | ops/s |
 
-## GeoJSON Deserialize
+## Deserialize GeoJSON string to GeoJSON Object
 
 ### Run
 
@@ -34,14 +34,25 @@ Benchmarks for some java libraries.
 
 ### Result
 
-| Benchmark                                         |  Mode | Cnt |  Score | Error   | Units |
-| :------------------------------------------------ | ----- | --- | -----: | :------ | ----  |
-|GeoJSONBenchmark.benchBigDataMaptalksGeoJSON       | thrpt | 200 |   0.736| ± 0.050 | ops/s |
-|GeoJSONBenchmark.benchBigDataOpendatalabGeoJSON    | thrpt | 200 |   2.980| ± 0.017 | ops/s |
-|GeoJSONBenchmark.benchBigDataWololoGeoJSON         | thrpt | 200 |   0.530| ± 0.048 | ops/s |
-|GeoJSONBenchmark.benchMediumDataMaptalksGeoJSON    | thrpt | 200 |  19.733| ± 0.056 | ops/s |
-|GeoJSONBenchmark.benchMediumDataOpendatalabGeoJSON | thrpt | 200 |  38.090| ± 0.354 | ops/s |
-|GeoJSONBenchmark.benchMediumDataWololoGeoJSON      | thrpt | 200 |  15.371| ± 0.226 | ops/s |
-|GeoJSONBenchmark.benchSmallDataMaptalksGeoJSON     | thrpt | 200 | 152.130| ± 1.033 | ops/s |
-|GeoJSONBenchmark.benchSmallDataOpendatalabGeoJSON  | thrpt | 200 | 277.090| ± 1.482 | ops/s |
-|GeoJSONBenchmark.benchSmallDataWololoGeoJSON       | thrpt | 200 | 124.473| ± 0.604 | ops/s |
+| Benchmark                                          |  Mode | Cnt |  Score | Error   | Units |
+| :------------------------------------------------- | ----- | --- | -----: | :------ | ----- |
+| GeoJSONBenchmark.benchBigDataMaptalksGeoJSON       | thrpt | 200 |   0.736| ± 0.050 | ops/s |
+| GeoJSONBenchmark.benchBigDataOpendatalabGeoJSON    | thrpt | 200 |   2.980| ± 0.017 | ops/s |
+| GeoJSONBenchmark.benchBigDataWololoGeoJSON         | thrpt | 200 |   0.530| ± 0.048 | ops/s |
+| GeoJSONBenchmark.benchMediumDataMaptalksGeoJSON    | thrpt | 200 |  19.733| ± 0.056 | ops/s |
+| GeoJSONBenchmark.benchMediumDataOpendatalabGeoJSON | thrpt | 200 |  38.090| ± 0.354 | ops/s |
+| GeoJSONBenchmark.benchMediumDataWololoGeoJSON      | thrpt | 200 |  15.371| ± 0.226 | ops/s |
+| GeoJSONBenchmark.benchSmallDataMaptalksGeoJSON     | thrpt | 200 | 152.130| ± 1.033 | ops/s |
+| GeoJSONBenchmark.benchSmallDataOpendatalabGeoJSON  | thrpt | 200 | 277.090| ± 1.482 | ops/s |
+| GeoJSONBenchmark.benchSmallDataWololoGeoJSON       | thrpt | 200 | 124.473| ± 0.604 | ops/s |
+
+## Deserialize GeoJSON string to JTS Geometry
+
+### Result
+
+| Benchmark                                 |  Mode | Cnt |  Score | Error   | Units |
+| :---------------------------------------- | ----- | --- | -----: | :------ | ----- |
+| ReadJTSBenchmark.benchJacksonDatatypeJTS  | thrpt | 200 | 65.614 | ± 0.823 | ops/s |
+| ReadJTSBenchmark.benchLocationTechGeoJSON | thrpt | 200 | 33.473 | ± 0.152 | ops/s |
+| ReadJTSBenchmark.benchMaptalksGeoJSON     | thrpt | 200 | 38.823 | ± 0.625 | ops/s |
+| ReadJTSBenchmark.benchWololoGeoJSON       | thrpt | 200 | 43.695 | ± 0.149 | ops/s |

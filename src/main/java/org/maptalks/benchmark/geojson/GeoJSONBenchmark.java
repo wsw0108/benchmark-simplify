@@ -27,7 +27,7 @@ public class GeoJSONBenchmark {
         }
     }
 
-    static String readGzipGeoJSON(String name) throws IOException {
+    public static String readGzipGeoJSON(String name) throws IOException {
         InputStream is = GeoJSONBenchmark.class.getResourceAsStream(name);
         GZIPInputStream gis = new GZIPInputStream(is);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
