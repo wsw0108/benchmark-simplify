@@ -30,7 +30,7 @@ Benchmarks for some java libraries.
 ### Run
 
 - Run GeoJSONBenchmark.main(), OR
-- Run `java -jar target\benchmarks.jar GeoJSONBenchmark
+- Run `java -jar target\benchmarks.jar GeoJSONBenchmark`
 
 ### Result
 
