@@ -12,6 +12,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>1.8</jdk.version>
     <uberjar.name>benchmarks</uberjar.name>
+    <jackson.version>2.9.4</jackson.version>
   </properties>
 
   <repositories>
@@ -28,14 +29,39 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.goebl</groupId>
-      <artifactId>simplify</artifactId>
-      <version>1.0.0</version>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core-benchmarks</artifactId>
+      <version>1.20</version>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.46</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
       <groupId>com.vividsolutions</groupId>
-      <artifactId>jts</artifactId>
-      <version>1.13</version>
+      <artifactId>jts-core</artifactId>
+      <version>1.14.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.goebl</groupId>
+      <artifactId>simplify</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
@@ -49,16 +75,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-core-benchmarks</artifactId>
-      <version>1.20</version>
-    </dependency>
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>fastjson</artifactId>
-      <version>1.2.7</version>
-    </dependency>
-    <dependency>
       <groupId>org.maptalks</groupId>
       <artifactId>proj4m</artifactId>
       <version>1.0.0</version>
@@ -67,6 +83,37 @@
       <groupId>com.github.watertank</groupId>
       <artifactId>proj4m-lite</artifactId>
       <version>f88fc7057d</version>
+    </dependency>
+    <dependency>
+      <groupId>org.maptalks</groupId>
+      <artifactId>geojson4j</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.wololo</groupId>
+      <artifactId>jts2geojson</artifactId>
+      <version>0.10.0</version>
+    </dependency>
+    <dependency>
+      <groupId>de.grundid.opendatalab</groupId>
+      <artifactId>geojson-jackson</artifactId>
+      <version>1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.bedatadriven</groupId>
+      <artifactId>jackson-datatype-jts</artifactId>
+      <version>2.4</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.vividsolutions</groupId>
+          <artifactId>jts</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.locationtech.jts.io</groupId>
+      <artifactId>jts-io-common</artifactId>
+      <version>1.15.0</version>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
