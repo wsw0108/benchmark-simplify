@@ -67,3 +67,18 @@ Benchmarks for some java libraries.
 | DeserializeFeatureBenchmark.benchMediumDataMaptalksGeoJSON| thrpt |  10 |  19.510| ± 0.535 | ops/s |
 | DeserializeFeatureBenchmark.benchSmallDataJacksonDataJTS  | thrpt |  10 | 287.442| ± 2.012 | ops/s |
 | DeserializeFeatureBenchmark.benchSmallDataMaptalksGeoJSON | thrpt |  10 | 159.009| ± 0.779 | ops/s |
+
+## Decode to JTS Geometry
+
+Decode to JTS Geometry from GeoJSON/WKT/WKB/Base64-WKB
+
+### Result
+```
+# Run complete. Total time: 00:27:00
+
+Benchmark                              Mode  Cnt        Score       Error  Units
+DecodeBenchmark.benchDecodeBase64WKB  thrpt  200  2963909.353 ± 11006.605  ops/s
+DecodeBenchmark.benchDecodeGeoJSON    thrpt  200   838314.856 ±  7005.510  ops/s
+DecodeBenchmark.benchDecodeWKB        thrpt  200  5819890.781 ± 37824.799  ops/s
+DecodeBenchmark.benchDecodeWKT        thrpt  200  1492566.011 ± 10401.999  ops/s
+```
