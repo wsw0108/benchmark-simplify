@@ -1,13 +1,18 @@
 package org.maptalks.benchmark.jts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 import org.maptalks.benchmark.geojson.GeoJSONBenchmark;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReadJTSBenchmark {
 
@@ -32,7 +37,7 @@ public class ReadJTSBenchmark {
         jacksonDatatypeMapper.registerModule(new com.bedatadriven.jackson.datatype.jts.JtsModule());
     }
 
-    static String genGeometryCollectionJSON() throws IOException {
+    public static String genGeometryCollectionJSON() throws IOException {
         String name = "/geojson/medium/entry_point.geojson.gz";
         String text = GeoJSONBenchmark.readGzipGeoJSON(name);
         ObjectMapper mapper = new ObjectMapper();
@@ -55,24 +60,36 @@ public class ReadJTSBenchmark {
         new Runner(opt).run();
     }
 
+    @SuppressWarnings("unused")
     @Benchmark
     public void benchMaptalksGeoJSON() {
         org.maptalks.geojson.jts.GeoJSONReader.read(geometryCollectionJSON);
     }
 
+    @SuppressWarnings("unused")
     @Benchmark
     public void benchWololoGeoJSON() {
         wololoJTSReader.read(geometryCollectionJSON);
     }
 
+    @SuppressWarnings("unused")
     @Benchmark
     public void benchLocationTechGeoJSON() throws org.locationtech.jts.io.ParseException {
         locationTechReader.read(geometryCollectionJSON);
     }
 
+    @SuppressWarnings("unused")
     @Benchmark
     public void benchJacksonDatatypeJTS() throws IOException {
         jacksonDatatypeMapper.readValue(geometryCollectionJSON, com.vividsolutions.jts.geom.Geometry.class);
     }
 
+    public static List<com.vividsolutions.jts.geom.Geometry> parseGeometryCollection(String json) throws IOException {
+        List<Geometry> geometries = new ArrayList<>();
+        GeometryCollection gc = jacksonDatatypeMapper.readValue(json, GeometryCollection.class);
+        for (int i = 0; i < gc.getNumGeometries(); i++) {
+            geometries.add(gc.getGeometryN(i));
+        }
+        return geometries;
+    }
 }
